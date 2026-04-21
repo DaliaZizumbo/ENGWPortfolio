@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dalia Zizumbo — ENGW3307 Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Sacramento&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #fdf6f0;
+      --blush: #f2d9d9;
+      --rose: #e8b4b4;
+      --dusty: #c9897a;
+      --brown: #6b3f2e;
+      --mocha: #3d1f13;
+      --muted: #9c7060;
+      --white: #fff8f4;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--cream);
+      color: var(--mocha);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: var(--dusty);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--dusty);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      opacity: 0.5;
+    }
+
+    body.hovering .cursor {
+      width: 20px;
+      height: 20px;
+      background: var(--rose);
+    }
+
+    body.hovering .cursor-ring {
+      width: 52px;
+      height: 52px;
+      opacity: 0.3;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(169, 107, 89, 0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 3rem;
+      background: rgba(253, 246, 240, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(201, 137, 122, 0.15);
+      transition: padding 0.3s;
+    }
+
+    nav.scrolled {
+      padding: 0.75rem 3rem;
+    }
+
+    .nav-logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.7rem;
+      color: var(--brown);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-logo:hover {
+      color: var(--dusty);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.76rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 50px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--brown);
+      background: rgba(232, 180, 180, 0.2);
+    }
+
+    .nav-links a.active {
+      color: var(--brown);
+      background: var(--blush);
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.22s; }
+    .reveal-delay-3 { transition-delay: 0.34s; }
+
+    /* HERO */
+    #intro {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 5rem;
+      overflow: hidden;
+    }
+
+    #intro::after {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(232, 180, 180, 0.38) 0%, transparent 68%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floatOrb 7s ease-in-out infinite;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-28px) scale(1.04); }
+    }
+
+    .intro-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .intro-text .eyebrow {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      color: var(--dusty);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.1s ease forwards;
+    }
+
+    .intro-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(3rem, 5.5vw, 5.8rem);
+      font-weight: 300;
+      line-height: 1.06;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.25s ease forwards;
+    }
+
+    .intro-text h1 .script {
+      font-family: 'Outfit', sans-serif;
+      color: var(--brown);
+      display: block;
+      font-size: 1.1em;
+    }
+
+    .intro-text .tagline {
+      margin-top: 1.4rem;
+      font-size: 0.97rem;
+      line-height: 1.85;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 400px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s ease forwards;
+    }
+
+    .scroll-hint {
+      margin-top: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s ease forwards;
+    }
+
+    .scroll-hint .line {
+      width: 40px;
+      height: 1px;
+      background: var(--dusty);
+      transform-origin: left;
+      transform: scaleX(0);
+      animation: lineGrow 1.2s 1s ease forwards;
+    }
+
+    @keyframes lineGrow {
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bio-card {
+      background: var(--white);
+      border: 1px solid rgba(201, 137, 122, 0.2);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 60px rgba(107, 63, 46, 0.08);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.45s ease forwards;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .bio-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(242, 217, 217, 0.5) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .bio-card:hover {
+      transform: translateY(-6px) rotate(0.4deg);
+      box-shadow: 0 30px 80px rgba(107, 63, 46, 0.12);
+    }
+
+    .bio-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      color: var(--dusty);
+      margin-bottom: 1.1rem;
+    }
+
+    .bio-card p {
+      font-size: 0.88rem;
+      line-height: 1.85;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 0.75rem;
+    }
+
+    .bio-divider {
+      height: 1px;
+      background: rgba(201, 137, 122, 0.2);
+      margin: 1.25rem 0;
+    }
+
+    .bio-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .bio-tag {
+      padding: 0.25rem 0.75rem;
+      background: rgba(232, 180, 180, 0.2);
+      border: 1px solid rgba(201, 137, 122, 0.25);
+      border-radius: 50px;
+      font-size: 0.72rem;
+      color: var(--dusty);
+    }
+
+    /* PHOTOS */
+    #photos {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 3rem;
+      border-top: 1px solid rgba(201, 137, 122, 0.12);
+    }
+
+    .photos-row {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+      align-items: end;
+    }
+
+    .photo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .photo-item:nth-child(2) {
+      margin-top: 2rem;
+    }
+
+    .photo-frame {
+      width: 100%;
+      border-radius: 999px 999px 60px 60px;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.22, 0.68, 0, 1.2), box-shadow 0.4s ease;
+    }
+
+    .photo-frame:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 24px 60px rgba(107, 63, 46, 0.14);
+    }
+
+    .photo-item:nth-child(1) .photo-frame { aspect-ratio: 4/5; }
+    .photo-item:nth-child(2) .photo-frame { aspect-ratio: 3/4; }
+    .photo-item:nth-child(3) .photo-frame { aspect-ratio: 4/5; }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-caption {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      color: var(--dusty);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .photo-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      font-style: italic;
+      margin-top: -0.4rem;
+    }
+
+    /* PROJECTS */
+    #projects {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 3rem;
+      background: var(--white);
+      border-top: 1px solid rgba(201, 137, 122, 0.12);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 3.2rem);
+      font-weight: 300;
+      color: var(--mocha);
+    }
+
+    .section-header h2 em {
+      font-style: italic;
+      color: var(--brown);
+    }
+
+    .projects-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+
+    .proj-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--cream);
+      border: 1px solid rgba(201, 137, 122, 0.18);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.22, 0.68, 0, 1.2),
+                  box-shadow 0.35s ease,
+                  border-color 0.25s;
+    }
+
+    .proj-card:hover {
+      transform: translateY(-10px) scale(1.01);
+      box-shadow: 0 28px 70px rgba(107, 63, 46, 0.14);
+      border-color: rgba(201, 137, 122, 0.4);
+    }
+
+    .card-banner {
+      height: 8px;
+      background: linear-gradient(90deg, var(--rose), var(--dusty));
+      transition: height 0.3s;
+    }
+
+    .proj-card:hover .card-banner {
+      height: 13px;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .card-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: rgba(232, 180, 180, 0.45);
+      margin-bottom: 0.4rem;
+      transition: color 0.3s;
+    }
+
+    .proj-card:hover .card-num {
+      color: var(--rose);
+    }
+
+    .card-body h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--mocha);
+      margin-bottom: 0.35rem;
+      line-height: 1.2;
+    }
+
+    .card-body .genre {
+      font-size: 0.73rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      margin-bottom: 0.9rem;
+    }
+
+    .card-body .desc {
+      font-size: 0.87rem;
+      line-height: 1.75;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .card-cta {
+      margin-top: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      transition: color 0.2s, gap 0.2s;
+    }
+
+    .proj-card:hover .card-cta {
+      color: var(--brown);
+      gap: 0.8rem;
+    }
+
+    .card-cta svg {
+      transition: transform 0.3s;
+    }
+
+    .proj-card:hover .card-cta svg {
+      transform: translateX(4px);
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 2rem 3rem;
+      background: var(--cream);
+      border-top: 1px solid rgba(201, 137, 122, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-sig {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      color: var(--dusty);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--brown);
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      #intro { padding: 7rem 1.5rem 4rem; }
+      .intro-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .photos-row { grid-template-columns: 1fr; }
+      .photo-item:nth-child(2) { margin-top: 0; }
+      .projects-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav id="nav">
+    <a class="nav-logo" href="index.html">Dalia Zizumbo</a>
+    <ul class="nav-links">
+      <li><a href="#intro" class="active" data-section="intro">Home</a></li>
+      <li><a href="#photos" data-section="photos">About</a></li>
+      <li><a href="#projects" data-section="projects">Projects</a></li>
+    </ul>
+  </nav>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="intro-inner">
+      <div class="intro-text">
+        <p class="eyebrow">ENGW3307 Portfolio — 2026</p>
+        <h1>
+          Bridging my writing
+          <span class="script">with culture.</span>
+        </h1>
+        <p class="tagline">
+          Welcome to my English portfolio! This is a collection of my writing throughout the semester & my takeaways.
+        </p>
+        <div class="scroll-hint">
+          <span class="line"></span>
+          Scroll to learn more about me and my work
+        </div>
+      </div>
+
+      <div class="bio-card hover-trigger">
+        <p class="bio-label">Hi, I'm Dalia 🌸</p>
+        <p>I'm a first-gen Latina from Chicago, IL studying Data Science and Behavioral Neuroscience!</p>
+        <p>President of U-F1RST, a student-led organization that aims to close the information and support gap for first-gen and low-income students.</p>
+        <p>I also work part-time as a clinical research coordinator at the Center for Genomic Medicine at Mass General Brigham, TA for the Khoury co-op class, and as an office assistant at the Center for Intercultural Engagement (CIE).</p>
+        <div class="bio-divider"></div>
+        <div class="bio-tags">
+          <span class="bio-tag">First-Gen</span>
+          <span class="bio-tag">Chicago, IL</span>
+          <span class="bio-tag">Data Science</span>
+          <span class="bio-tag">Behavioral Neuroscience</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTOS -->
+  <section id="photos">
+    <div class="photos-row">
+
+      <div class="photo-item reveal reveal-delay-1">
+        <div class="photo-frame hover-trigger">
+          <img src="Dalia.jpeg" alt="Dalia"/>
+        </div>
+        <p class="photo-caption">I love polka dots!</p>
+        <p class="photo-sub">Taken at Sonsie (their french toast is the best)</p>
+      </div>
+
+      <div class="photo-item reveal reveal-delay-2">
+        <div class="photo-frame hover-trigger">
+          <img src="Dalia2.jpeg" alt="Dalia"/>
+        </div>
+        <p class="photo-caption">I love rating/unboxing things!</p>
+        <p class="photo-sub">Taken after unboxing my smiski in Newbury</p>
+      </div>
+
+      <div class="photo-item reveal reveal-delay-3">
+        <div class="photo-frame hover-trigger">
+          <img src="Dalia3.jpeg" alt="Dalia"/>
+        </div>
+        <p class="photo-caption">I love sweet treats!</p>
+        <p class="photo-sub">Taken at U-F1RST's First-Gen Student Academic Symposium</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 0 0 4rem;">
+      <div class="section-header reveal">
+        <h2>My work this semester</h2>
+      </div>
+      <p style="text-align: center; font-size: 0.82rem; color: var(--muted); margin-top: -2.5rem; margin-bottom: 3.5rem; font-style: italic;">
+        Click any card to explore the full project!
+      </p>
+    </div>
+
+    <div class="projects-grid">
+
+      <a class="proj-card reveal reveal-delay-1 hover-trigger" href="project1.html">
+        <div class="card-banner"></div>
+        <div class="card-body">
+          <div class="card-num">01</div>
+          <h3>Theoretically Speaking</h3>
+          <p class="genre">A truly exploratory essay</p>
+          <p class="desc">A autobiography investigating how significant ideas in my field at NU have been shaped by major theorists, written to a specific audience (my peers).</p>
+          <span class="card-cta">
+            Read more
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a class="proj-card reveal reveal-delay-2 hover-trigger" href="project2.html">
+        <div class="card-banner" style="background: linear-gradient(90deg, #d4a88a, #c9897a);"></div>
+        <div class="card-body">
+          <div class="card-num">02</div>
+          <h3>Literature Review</h3>
+          <p class="genre">A miniature literature review</p>
+          <p class="desc">A scholarly lit review on "Daily Life and Wellness: How Hispanic Cultural Origins Shape Health Behaviors" synthesizing 10 research papers.</p>
+          <span class="card-cta">
+            Read more
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a class="proj-card reveal reveal-delay-3 hover-trigger" href="project3.html">
+        <div class="card-banner" style="background: linear-gradient(90deg, #c9897a, #6b3f2e);"></div>
+        <div class="card-body">
+          <div class="card-num">03</div>
+          <h3>Wikipedia</h3>
+          <p class="genre">A contribution to an online encyclopedia</p>
+          <p class="desc">Adding to the Wikipedia page on "Tortillas," connecting to my literature review's focus on Hispanic diets and cultural food practices.</p>
+          <span class="card-cta">
+            Read more
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- PORTFOLIO REFLECTION -->
+  <section style="position: relative; z-index: 1; padding: 6rem 3rem; border-top: 1px solid rgba(201, 137, 122, 0.12);">
+    <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem;">
+
+      <!-- Box 1: Portfolio Reflection -->
+      <div style="background: var(--white); border: 1px solid rgba(201, 137, 122, 0.2); border-radius: 20px; padding: 2.5rem; box-shadow: 0 8px 30px rgba(107, 63, 46, 0.07);">
+        <p style="font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dusty); margin-bottom: 0.75rem;">Portfolio Reflection</p>
+        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700; color: var(--mocha); margin-bottom: 1rem;">Looking Back</h3>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Link to my portfolio reflection that goes over my growth in this class.</p>
+        <a href="Portfolio Refelction.pdf" target="_blank"
+          style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.25rem; background: var(--blush); border: 1px solid rgba(201, 137, 122, 0.3); border-radius: 50px; font-size: 0.78rem; font-weight: 500; color: var(--brown); text-decoration: none; margin-top: 0.5rem;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          View Portfolio Reflection
+        </a>
+      </div>
+
+      <!-- Box 2: Acknowledgements -->
+      <div style="background: var(--blush); border: 1px solid rgba(201, 137, 122, 0.2); border-radius: 20px; padding: 2.5rem; box-shadow: 0 8px 30px rgba(107, 63, 46, 0.07);">
+        <p style="font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dusty); margin-bottom: 0.75rem;">Acknowledgements</p>
+        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700; color: var(--mocha); margin-bottom: 1rem;">Device & Technology</h3>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Laptop (MacBook Air Apple M2)</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Tablet (iPad Air 5th Generation)</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Phone (iPhone 16 Pro Max)</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Google Docs</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Microsoft Word</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Northeastern Library</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Google and Safari</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">MyBib</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Claude (Sonnet 4.6)</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Jupyter Notebook (7.5.5)</p>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: var(--muted); font-weight: 300;">Visual Studio Code (1.116)</p>
+      </div>
+
+      <!-- Box 3: Thank the Professor -->
+      <div style="background: var(--mocha); border-radius: 20px; padding: 2.5rem; box-shadow: 0 8px 30px rgba(107, 63, 46, 0.12); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -1rem; right: 1.5rem; font-family: 'Sacramento', cursive; font-size: 8rem; color: rgba(255, 255, 255, 0.06); pointer-events: none;">✦</div>
+        <p style="font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(232, 180, 180, 0.7); margin-bottom: 0.75rem;">A Note of Gratitude</p>
+        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700; color: var(--blush); margin-bottom: 1rem;">Thank You Dr.Musselman!</h3>
+        <p style="font-size: 0.9rem; line-height: 1.85; color: rgba(253, 246, 240, 0.65); font-weight: 300;">
+          Thank you for your guidance and support throughout this course. Your feedback has been invaluable in my growth as a writer. Your class projects have also allowed me to explore new ideas and techniques. Last but not least, I hope you catch that cat over the summer!
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Photo 1 -->
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 3rem; text-align: center;">
+      <img src="Portfoliofeedback.png" alt="Thank you"
+        style="max-width: 400px; width: 100%; max-height: 400px; object-fit: cover; display: block; border-radius: 20px; box-shadow: 0 8px 30px rgba(107, 63, 46, 0.1); margin: 0 auto;"/>
+    </div>
+
+    <!-- Photo 2 -->
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 3rem; text-align: center;">
+      <img src="TraceEval.png" alt="Thank you"
+        style="max-width: 400px; width: 100%; max-height: 400px; object-fit: cover; display: block; border-radius: 20px; box-shadow: 0 8px 30px rgba(107, 63, 46, 0.1); margin: 0 auto;"/>
+    </div>
+
+  </section>
+
+  <footer>
+    <span class="footer-sig">Dalia Zizumbo</span>
+    <div class="footer-links">
+      <a href="#intro">Home</a>
+      <a href="#projects">Projects</a>
+      <a href="#photos">About</a>
+    </div>
+    <span style="font-size: 0.78rem; color: var(--muted);">ENGW3307 Portfolio · 2026</span>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+    });
+
+    (function tick() {
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(tick);
+    })();
+
+    document.querySelectorAll('.hover-trigger, a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    const nav = document.getElementById('nav');
+    const secs = document.querySelectorAll('section[id]');
+    const links = document.querySelectorAll('.nav-links a[data-section]');
+
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+      let cur = '';
+      secs.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) cur = s.id;
+      });
+      links.forEach(a => a.classList.toggle('active', a.dataset.section === cur));
+    });
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>

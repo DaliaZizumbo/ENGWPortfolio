@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wikipedia — Dalia Zizumbo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Sacramento&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #fdf6f0;
+      --blush: #f2d9d9;
+      --rose: #e8b4b4;
+      --dusty: #c9897a;
+      --brown: #6b3f2e;
+      --mocha: #3d1f13;
+      --muted: #9c7060;
+      --white: #fff8f4;
+      --accent: #5c2d1e;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--cream);
+      color: var(--mocha);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: var(--dusty);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--dusty);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      opacity: 0.5;
+    }
+
+    body.hovering .cursor {
+      width: 20px;
+      height: 20px;
+      background: var(--rose);
+    }
+
+    body.hovering .cursor-ring {
+      width: 52px;
+      height: 52px;
+      opacity: 0.3;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(169, 107, 89, 0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 3rem;
+      background: rgba(253, 246, 240, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(201, 137, 122, 0.15);
+      transition: padding 0.3s;
+    }
+
+    nav.scrolled {
+      padding: 0.75rem 3rem;
+    }
+
+    .nav-logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.7rem;
+      color: var(--brown);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-logo:hover {
+      color: var(--dusty);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.76rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 50px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--brown);
+      background: rgba(232, 180, 180, 0.2);
+    }
+
+    .nav-links a.active {
+      color: var(--brown);
+      background: var(--blush);
+    }
+
+    /* HEADER */
+    .page-header {
+      position: relative;
+      z-index: 1;
+      padding: 8rem 3rem 5rem;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(201, 137, 122, 0.15);
+    }
+
+    .page-header::after {
+      content: '03';
+      position: absolute;
+      right: 3rem;
+      bottom: -2rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 18rem;
+      line-height: 1;
+      color: rgba(201, 137, 122, 0.1);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .page-header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 3rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--brown);
+    }
+
+    .back-link svg {
+      transition: transform 0.2s;
+    }
+
+    .back-link:hover svg {
+      transform: translateX(-3px);
+    }
+
+    .project-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      font-weight: 300;
+      line-height: 1.08;
+      color: var(--mocha);
+    }
+
+    .page-header h1 .script {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent);
+      display: block;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item .meta-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .meta-item .meta-value {
+      font-size: 0.92rem;
+      color: var(--mocha);
+      margin-top: 0.2rem;
+    }
+
+    /* TABS */
+    .content-area {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 3rem 6rem;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border-bottom: 1px solid rgba(201, 137, 122, 0.2);
+      margin-bottom: 3rem;
+    }
+
+    .tab {
+      padding: 0.7rem 1.1rem;
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      color: var(--brown);
+    }
+
+    .tab.active {
+      color: var(--brown);
+      border-bottom-color: var(--dusty);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* CONTENT STYLES */
+    .tab-pane h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--mocha);
+      margin-bottom: 1.25rem;
+    }
+
+    .tab-pane h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--brown);
+      margin: 2rem 0 0.75rem;
+    }
+
+    .tab-pane p {
+      font-size: 0.97rem;
+      line-height: 1.9;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .tab-pane ul {
+      margin: 0.5rem 0 1rem 1.25rem;
+    }
+
+    .tab-pane ul li {
+      font-size: 0.97rem;
+      line-height: 1.9;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 0.4rem;
+    }
+
+    .pull-quote {
+      margin: 2rem 0;
+      background: var(--blush);
+      border-left: 3px solid var(--rose);
+      border-radius: 0 12px 12px 0;
+      padding: 1.25rem 1.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--brown);
+    }
+
+    .work-box {
+      background: var(--white);
+      border: 1px solid rgba(201, 137, 122, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .work-box .work-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      margin-bottom: 0.75rem;
+    }
+
+    .work-box p {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      background: var(--blush);
+      border: 1px solid rgba(201, 137, 122, 0.3);
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--brown);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .link-btn:hover {
+      background: var(--rose);
+      transform: translateY(-2px);
+    }
+
+    .link-btn svg {
+      flex-shrink: 0;
+    }
+
+    .review-card {
+      background: var(--white);
+      border: 1px solid rgba(201, 137, 122, 0.18);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .review-card .reviewer {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      margin-bottom: 0.5rem;
+    }
+
+    .review-card p {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .skill-tag {
+      padding: 0.3rem 0.85rem;
+      background: rgba(232, 180, 180, 0.2);
+      border: 1px solid rgba(201, 137, 122, 0.25);
+      border-radius: 50px;
+      font-size: 0.76rem;
+      color: var(--dusty);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .skill-tag:hover {
+      background: var(--rose);
+      color: var(--white);
+    }
+
+    .disclosure-box {
+      background: var(--blush);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin-top: 1.5rem;
+      border: 1px solid rgba(201, 137, 122, 0.2);
+    }
+
+    .disclosure-box h4 {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--brown);
+      margin-bottom: 0.6rem;
+    }
+
+    .disclosure-box p {
+      font-size: 0.85rem;
+      line-height: 1.75;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .closing-card {
+      margin-top: 2.5rem;
+      background: var(--brown);
+      color: var(--cream);
+      padding: 2.5rem;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing-card::before {
+      content: '"';
+      position: absolute;
+      top: -1rem;
+      right: 1.5rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 10rem;
+      color: rgba(255, 255, 255, 0.07);
+      pointer-events: none;
+    }
+
+    .closing-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      color: var(--blush);
+      margin-bottom: 0.75rem;
+    }
+
+    .closing-card p {
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: rgba(253, 246, 240, 0.7);
+      font-weight: 300;
+    }
+
+    /* BOTTOM NAV */
+    .project-nav {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 3rem;
+      background: var(--blush);
+      border-top: 1px solid rgba(201, 137, 122, 0.2);
+    }
+
+    .project-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .project-nav a:hover {
+      color: var(--brown);
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 1.75rem 3rem;
+      background: var(--cream);
+      border-top: 1px solid rgba(201, 137, 122, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-sig {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      color: var(--dusty);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--brown);
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .page-header { padding: 7rem 1.5rem 3rem; }
+      .page-header-inner { padding: 0 1.5rem; }
+      .page-header::after { display: none; }
+      .content-area { padding: 3rem 1.5rem 4rem; }
+      .project-nav { padding: 1.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav id="nav">
+    <a class="nav-logo" href="index.html">Dalia Zizumbo</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a class="active" href="project3.html">Project 3</a></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <a class="back-link hover-trigger" href="index.html">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M11.5 7H2.5M6 3.5L2.5 7 6 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to Portfolio
+      </a>
+      <p class="project-label">Project 03</p>
+      <h1>
+        Wikipedia
+        <span class="script">Article</span>
+      </h1>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="meta-label">Genre</div>
+          <div class="meta-value">A contribution to an online encyclopedia</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Length</div>
+          <div class="meta-value">483 words</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Date</div>
+          <div class="meta-value">April 17th, 2026</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-area">
+    <div class="tabs">
+      <div class="tab active" data-tab="overview">Overview</div>
+      <div class="tab" data-tab="mywork">My Work</div>
+      <div class="tab" data-tab="process">Process</div>
+      <div class="tab" data-tab="skills">Skills</div>
+      <div class="tab" data-tab="acknowledgements">Acknowledgements</div>
+      <div class="tab" data-tab="reflection">Reflection</div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="tab-pane active" data-pane="overview">
+      <h2>What this project is about</h2>
+      <p>
+        Enhancing the Wikipedia page on "Tortillas," connecting to my literature review's focus on Hispanic diets and cultural
+        food practices. This project required writing for the largest public audience I've ever written for, following Wikipedia's
+        strict community guidelines.
+      </p>
+    </div>
+
+    <!-- MY WORK -->
+    <div class="tab-pane" data-pane="mywork">
+      <h2>My Work</h2>
+      <p>View my Wikipedia contribution using the link below.</p>
+
+      <div class="work-box">
+        <p class="work-label">Wikipedia Contribution</p>
+        <p>View on Wikipedia</p>
+        <br/>
+        <a class="link-btn" href="https://en.wikipedia.org/wiki/Tortilla" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Tortilla Article
+        </a>
+
+        <h3>My Specific Additions</h3>
+        <p>
+          I focused on adding information about alternative and specialty tortillas, as well as addressing the issue of
+          mislabeling and tortilla fraud. I was also inspired to include the tortilla fraud section from the "Bread" article
+          on Wikipedia because I found it interesting and relevant to the topic.
+        </p>
+
+        <!-- Screenshots -->
+        <div style="margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <img
+              src="Contribution1.png"
+              alt="Wikipedia screenshot 1"
+              style="width: 100%; border-radius: 10px; border: 1px solid rgba(201, 137, 122, 0.2); box-shadow: 0 4px 16px rgba(107, 63, 46, 0.08);"
+            />
+            <p style="font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 0.5rem; font-style: italic;">
+              Alternative and Specialty Tortillas
+            </p>
+          </div>
+          <div>
+            <img
+              src="Contribution2.png"
+              alt="Wikipedia screenshot 2"
+              style="width: 100%; border-radius: 10px; border: 1px solid rgba(201, 137, 122, 0.2); box-shadow: 0 4px 16px rgba(107, 63, 46, 0.08);"
+            />
+            <p style="font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 0.5rem; font-style: italic;">
+              Mislabeling and Tortilla Fraud
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROCESS -->
+    <div class="tab-pane" data-pane="process">
+      <h2>What I needed to consider</h2>
+      <p>My audience was the global, English-reading, Wikipedia-using public.</p>
+      <p>The tone and style had to adhere to a completely external set of expectations — those set by the Wikipedia community.</p>
+      <p>The topic was not fully my choice — I had to work on something that the Wikipedia community actually wanted or needed.</p>
+      <p>The project has no real end date. Even though my semester will end, my work will stay in the encyclopedia and will be editable by the community forever.</p>
+      <p>I had to deal with being collaborative asynchronously with people I didn't know (the Wikipedia community).</p>
+      <p>I was contributing to the largest writing project ever and the largest human collaboration ever.</p>
+      <p>My audience for my Wikipedia contribution may be larger than my audience for anything I had ever written.</p>
+      <h3>My process</h3>
+      <p>
+        When I first started looking at potential topics, I considered the main larger topics in my research lit review. I wanted
+        to edit some of the major articles like "Public Health", "Social Determinants of Health", or related topics, but since
+        these articles were already well developed I had to take a different approach in my search. I ended up looking for more
+        specific topics related to my research, and I found that the article on "Tortillas" was in need of some work. I focused
+        on adding information about alternative and specialty tortillas, as well as addressing the issue of mislabeling and
+        tortilla fraud. I was also inspired to include the tortilla fraud section from the "Bread" article on Wikipedia because
+        it was something I found interesting and relevant to the topic, and I thought it would be a good addition to the article.
+        I made sure to follow Wikipedia's guidelines for writing and editing, and I also made sure to cite my sources properly.
+      </p>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="tab-pane" data-pane="skills">
+      <h2>Skills I practiced</h2>
+      <p>This project helped me develop the following writing skills:</p>
+      <div class="tag-row">
+        <span class="skill-tag">Public Writing</span>
+        <span class="skill-tag">Neutral Tone</span>
+        <span class="skill-tag">Research</span>
+        <span class="skill-tag">Citation</span>
+        <span class="skill-tag">Audience Awareness</span>
+        <span class="skill-tag">Editing</span>
+        <span class="skill-tag">Community Collaboration</span>
+      </div>
+    </div>
+
+    <!-- ACKNOWLEDGEMENTS -->
+    <div class="tab-pane" data-pane="acknowledgements">
+      <h2>Acknowledgements</h2>
+      <p>I'd like to thank the following people for their support throughout this project:</p>
+      <h3>Instructor</h3>
+      <p>
+        I would like to thank Professor Musselman for her help throughout the drafting process for this project and for helping
+        me brainstorm ideas for this project when I wasn't sure what I could meaningfully contribute to my Wikipedia article.
+      </p>
+      <h3>Peer Reviews</h3>
+      <p>
+        A great big thank you to my friend Sierra Johnson for looking over my work and suggesting I rearranged the order of
+        my topics to help it flow better.
+      </p>
+      <h3>Wikipedia Community</h3>
+      <p>I didn't receive any suggestions or pushback from the Wikipedia community.</p>
+    </div>
+
+    <!-- REFLECTION -->
+    <div class="tab-pane" data-pane="reflection">
+      <h2>My Reflection</h2>
+      <p>Read my project 3 reflection below!</p>
+      <a class="link-btn" href="Zizumbo_P3_Reflection.pdf" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        View Reflection (PDF)
+      </a>
+    </div>
+
+  </div><!-- /content-area -->
+
+  <nav class="project-nav">
+    <a href="project2.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M11.5 7H2.5M6 3.5L2.5 7 6 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Previous Project
+    </a>
+    <a href="index.html">
+      Back to Home
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </nav>
+
+  <footer>
+    <span class="footer-sig">Dalia Zizumbo</span>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#projects">Projects</a>
+    </div>
+    <span style="font-size: 0.78rem; color: var(--muted);">ENGW3307 Portfolio · 2026</span>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+    });
+
+    (function tick() {
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(tick);
+    })();
+
+    document.querySelectorAll('.hover-trigger, a, button, .skill-tag').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelector(`.tab-pane[data-pane="${tab.dataset.tab}"]`).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
